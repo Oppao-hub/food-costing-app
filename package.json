@@ -3,12 +3,20 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
+    "@morrowdigital/watermelondb-expo-plugin": "^2.3.3",
+    "@nozbe/watermelondb": "^0.28.0",
+    "@nozbe/with-observables": "^1.6.0",
     "expo": "~57.0.12",
+    "expo-build-properties": "^57.0.10",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
-    "react-native": "0.86.2"
+    "react-native": "0.86.2",
+    "react-redux": "^9.3.0",
+    "redux": "^5.0.1",
+    "redux-saga": "^1.5.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^8.0.2",
     "@types/react": "~19.2.2",
     "typescript": "~6.0.3"
   },
