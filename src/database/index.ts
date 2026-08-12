@@ -11,7 +11,7 @@ import RecipePackaging from './models/RecipePackaging';
 
 const adapter = new SQLiteAdapter({
   schema,
-  jsi: true, /* Enable JSI for faster operations */
+  jsi: false, /* Disabled JSI to support React Native 0.76+ */
   onSetUpError: error => {
     console.error('Database setup error', error);
   }
