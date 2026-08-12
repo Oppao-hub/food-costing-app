@@ -24,7 +24,24 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "@morrowdigital/watermelondb-expo-plugin"
+      [
+        "@morrowdigital/watermelondb-expo-plugin",
+        {
+          "disableJsi": true
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "packagingOptions": {
+              "pickFirst": [
+                "**/libc++_shared.so"
+              ]
+            }
+          }
+        }
+      ]
     ]
   }
 }
