@@ -52,3 +52,124 @@ Shadows are extremely soft, diffuse, and subtle to create a floating effect with
     *   Y-Offset: -4px
     *   Blur: 16px
     *   Color: `rgba(0, 0, 0, 0.05)`
+
+## 📱 Screens & Components Architecture
+**File:** `screens_and_components.md`  
+**Purpose:** Defines the UI component hierarchy, ensuring DRY (Don't Repeat Yourself) principles, consistent styling based on the design tokens, and a logical directory structure.
+
+---
+
+### 📁 Directory Structure
+```text
+src/
+├── assets/
+│   ├── icons/
+│   └── images/
+├── components/
+│   ├── atoms/       # Base UI elements (Buttons, Inputs, Typography)
+│   ├── molecules/   # Simple groupings (Form Fields, List Rows)
+│   └── organisms/   # Complex layouts (Cards, Modals)
+├── navigation/      # Stack and Tab navigators
+└── screens/         # Full screen views
+```
+
+### 🧩 Reusable Components (DRY Principle)
+To maintain consistency and minimize redundant code, these components must be built first and reused across all screens. They should strictly inherit styles from the defined Design Tokens.
+
+#### Atoms
+*   **Typography:** A wrapper text component accepting props for variant (h1, h2, bodyPrimary, bodySecondary) to enforce standard font sizes and weights.
+*   **PrimaryButton:**
+    *   Background: `#FF5C00`
+    *   Border Radius: 999px (Pill)
+    *   Text: 16px, Semi-Bold, White.
+*   **SecondaryButton:**
+    *   Background: `#FFF0E5`
+    *   Text Color: `#FF5C00`
+*   **IconButton:** Circular button with a soft shadow for actions like edit, delete, or back.
+*   **Card:**
+    *   Background: `#FFFFFF`
+    *   Border Radius: 20px
+    *   Padding: 16px
+    *   Elevation: Y-4px, Blur 12px, `rgba(0,0,0,0.04)`
+
+#### Molecules
+*   **InputField:** Combines a label (Typography secondary) and a text input field. Needs states for default, active/focused (orange border), and error.
+*   **SelectDropdown:** Specifically for selecting Units (g, mL, pieces) or Target Margins.
+*   **DataRow:** A flexible row component for displaying key-value pairs (e.g., "Total Cost" on the left, "₱56.55" on the right).
+*   **ListItem:** Used in inventory and OPEX lists. Contains a title, optional subtitle (supplier), and right-aligned action icons or price.
+
+#### Organisms
+*   **FormModal:** A bottom sheet modal (using the 20px top border radius) to quickly add new OPEX items or ingredients without leaving the current screen.
+*   **RecipeCard:** Displays the Recipe Name, Selling Price, and Profit/Order prominently.
+
+### 📱 Screens & Views
+
+#### 1. Main Navigation (Bottom Tabs)
+*   **Behavior & Styling:** 
+    *   **Inactive State:** Use an outline (line) icon.
+    *   **Active State:** Use a filled icon with the Primary Brand color (`#FF5C00`).
+    *   **Labels:** Display a text label below the icon.
+    *   **Animation:** Include a smooth animation (e.g., subtle scale, spring, or fade) when navigating between tabs.
+*   **Dashboard** (Home Icon)
+*   **Inventory** (Box/Package Icon)
+*   **Recipes** (Chef Hat/Menu Icon)
+*   **OPEX** (Receipt/Calculator Icon)
+
+#### 2. Screen Specifications
+*   **DashboardScreen.tsx**
+    *   **Purpose:** The business overview and breakeven tracker.
+    *   **Components Used:**
+        *   Card (for the Top KPI Trackers: Gross Revenue, Gross Profit, Monthly OPEX, Net Profit).
+        *   SectionHeader ("Breakeven Analysis").
+        *   ListItem (mapping over recipes to show extra orders needed).
+
+*   **InventoryScreen.tsx (Top-Tabbed)**
+    *   **Purpose:** Manage raw materials. Contains top tabs to switch between "Ingredients" and "Packaging".
+    *   **Components Used:**
+        *   ListItem (renders the database rows).
+        *   Floating Action Button (FAB): Large `#FF5C00` button fixed at the bottom right (+ icon) to trigger the ItemFormScreen.
+
+*   **ItemFormScreen.tsx (Stack View or Modal)**
+    *   **Purpose:** Data entry for new ingredients/packaging.
+    *   **Components Used:**
+        *   InputField (Name, Supplier, Package Price, Qty, Shipping).
+        *   SelectDropdown (Unit selection).
+        *   PrimaryButton ("Save Item").
+
+*   **OpexScreen.tsx**
+    *   **Purpose:** Manage fixed monthly costs.
+    *   **Components Used:**
+        *   Card (Summary block showing Monthly OPEX and 5% Contingency).
+        *   ListItem (Iterating through expenses).
+        *   PrimaryButton ("Add Expense").
+
+*   **RecipeListScreen.tsx**
+    *   **Purpose:** Grid or list of all created recipes.
+    *   **Components Used:**
+        *   RecipeCard mapping.
+        *   FAB to create a new recipe.
+
+*   **RecipeDetailScreen.tsx**
+    *   **Purpose:** The heavy-lifting calculator view.
+    *   **Components Used:**
+        *   Typography (H1 for Recipe Name).
+        *   Two Card organisms: One for "Ingredients Needed" and one for "Packaging Needed".
+        *   DataRow (For the Pricing & Margin block: Subtotals, VAT, Selling Price, Profit).
+        *   SecondaryButton ("Apply PWD/Senior Discount").
+
+### 🖼 Required Assets
+
+#### 1. Vector Icons (SVG / react-native-vector-icons)
+Ensure icons have a consistent stroke width (usually 1.5px or 2px) and rounded caps to match the UI style.
+*   `icon-home` (Dashboard)
+*   `icon-box` (Inventory)
+*   `icon-receipt` (OPEX)
+*   `icon-book` (Recipes)
+*   `icon-plus` (For FABs and add buttons)
+*   `icon-chevron-right` / `icon-chevron-left` (Navigation)
+*   `icon-edit` / `icon-trash` (Management actions)
+*   `icon-search` (For finding ingredients quickly)
+
+#### 2. Static Images / Illustrations
+*   `empty-inventory.png`: A soft, friendly illustration (e.g., an open empty box) for when the database has no ingredients yet.
+*   `empty-recipes.png`: An illustration (e.g., a blank recipe card or plate) for the initial state of the Recipe screen.
