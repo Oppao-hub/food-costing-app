@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Modal, TouchableOpacity, FlatList } from 'react-native';
 import { Typography } from '../components/atoms/Typography';
 import { PrimaryButton } from '../components/atoms/PrimaryButton';
 import { InputField } from '../components/molecules/InputField';
 import { SelectDropdown } from '../components/molecules/SelectDropdown';
 import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
+import { spacing, radii } from '../theme/spacing';
+
+const UNIT_OPTIONS = ['kg', 'g', 'L', 'mL', 'pieces', 'packs'];
 
 export const ItemFormScreen = () => {
   const [unit, setUnit] = useState('');
+  const [isUnitModalVisible, setIsUnitModalVisible] = useState(false);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -22,7 +25,7 @@ export const ItemFormScreen = () => {
       <SelectDropdown 
         label="Unit of Measurement" 
         value={unit} 
-        onPress={() => setUnit(unit ? '' : 'kg')} 
+        onPress={() => setIsUnitModalVisible(true)} 
       />
       
       <InputField label="Shipping Cost (Optional)" placeholder="0.00" keyboardType="numeric" />
@@ -30,6 +33,34 @@ export const ItemFormScreen = () => {
       <View style={styles.buttonContainer}>
         <PrimaryButton title="Save Item" onPress={() => {}} />
       </View>
+
+      {/* Unit Selection Modal */}
+      <Modal visible={isUnitModalVisible} transparent animationType="fade">
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={() => setIsUnitModalVisible(false)}
+        >
+          <View style={styles.modalContent}>
+            <Typography variant="h2" style={styles.modalTitle}>Select Unit</Typography>
+            <FlatList
+              data={UNIT_OPTIONS}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity 
+                  style={styles.modalOption}
+                  onPress={() => {
+                    setUnit(item);
+                    setIsUnitModalVisible(false);
+                  }}
+                >
+                  <Typography variant="bodyPrimary">{item}</Typography>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </ScrollView>
   );
 };
@@ -47,6 +78,28 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sectionGap,
   },
   buttonContainer: {
-    marginTop: spacing.sectionGap,
+    marginTop: 24,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.screenPadding,
+  },
+  modalContent: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    width: '100%',
+    maxHeight: '60%',
+    padding: spacing.screenPadding,
+  },
+  modalTitle: {
+    marginBottom: spacing.sectionGap,
+  },
+  modalOption: {
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
   },
 });
